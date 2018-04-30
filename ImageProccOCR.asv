@@ -1,0 +1,90 @@
+%% Labels Inspection
+% The project is detecting if the label of a product on a production line 
+% is correct by getting the words from the label using OCR and comparing it
+% with the refrence.
+% We will test the code on a captured image from a high quality camera and 
+% a captured image from the laptop webcam which gives low quality images.
+% The project is made by : 
+% Mohamed Khaled Mohamed AbdelWarth Elbrollossy
+% Mohamed Yehia Mohamed Mohamed
+% Ahmed Saied Ahmed Mobarez
+% 
+
+%% Webcam Image
+
+%img1 = videoinput('winvideo',1);
+%img=getsnapshot(img1);
+%imwrite(img,'head.jpg','jpg');
+%figure(99);
+%imshow('head.jpg');
+
+%% Read the image
+a=imread('fname1.jpg');
+figure(1);
+imshow(a);
+
+%Conver the image to 2D
+a=rgb2gray(a);
+figure(2);
+imshow(a);
+
+%% Apply Median Filter
+a = medfilt2(a);
+figure(3);
+imshow(a);
+
+%% Adjust image intensity values
+a = imadjust(a);
+figure(4);
+imshow(a);
+
+%% Morphological 
+se = strel('rectangle',[2,3]);
+% First Dilation
+%a = imdilate(a,se);
+figure(5)
+imshow(a);
+
+% Second Erosion
+%a = imerode(a,se);
+figure(6)
+imshow(a);
+
+% Third Opening
+a = imopen(a,se);
+figure(7);
+imshow(a);
+
+%% Convert the image to binary based on threshold
+% Get the threshold value 
+threshold = graythresh(a);
+figure(8);
+imshow(a);
+% Convert to binary
+a =~im2bw(a,threshold);
+figure(9);
+imshow(a);
+
+%% OCR Result
+ocrresults = ocr(a);
+% Show the words extracted 
+[ocrresults.Text]
+
+%% Result
+
+% Import the correct label
+filename = 'result.mat';
+m = matfile(filename);
+result = m.result;
+% Compare two strings
+tf = strcmp(ans,result) 
+
+if tf == 1
+    z = 'Approved'
+else
+    z = 'Dispproved'
+end
+    
+
+
+
